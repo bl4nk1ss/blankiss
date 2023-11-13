@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>UiTM Parking System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            background-color: #007BFF;
+            color: white;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            width: 300px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 20px;
+        }
+
+        .login-form {
+            margin-top: 20px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            background: #007BFF;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        #areaSelectionPage,
+        #availabilityPage {
+            display: none;
+        }
+
+        #areaSelectionPage button,
+        #availabilityPage button,
+        #availabilityPage #availabilityText {
+            margin: 10px;
+        }
+
+        #availabilityPage {
+            text-align: left;
+        }
+
+        #clock {
+            font-size: 24px;
+            color: #007BFF;
+        }
+
+        #date {
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <img src="Images/UiTM-Logo.jpg" width="220">
+    <h1>UiTM Parking System</h1>
+    <div id="clock">00:00:00</div>
+    <div id="date">January 1, 2023</div>
+
+    <div class="container" id="loginPage">
+        <h1>Login</h1>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button id="loginButton">Login</button>
+    </div>
+
+    <div class="container" id="areaSelectionPage">
+        <h1>Select Parking Area</h1>
+        <button id="mawarButton">Mawar Parking Area</button>
+        <button id="melatiButton">Melati Parking Area</button>
+        <button id="logoutButton">Logout</button>
+    </div>
+
+    <div class="container" id="availabilityPage">
+        <h1>Availability</h1>
+        <p id="availabilityText"></p>
+        <button id="bookButton">Book Parking</button>
+        <button id="backButton">Back</button>
+    </div>
+
+    <script>
+        // Sample username and password for testing
+        const sampleUsername = "user";
+        const samplePassword = "password";
+
+        // Variables to track parking availability
+        let mawarAvailability = 100;
+        let melatiAvailability = 100;
+
+        // Function to update availability text
+        function updateAvailabilityText(area) {
+            if (area === "Mawar") {
+                document.getElementById("availabilityText").textContent = `${area} Parking Area - ${mawarAvailability}/100 available`;
+            } else if (area === "Melati") {
+                document.getElementById("availabilityText").textContent = `${area} Parking Area - ${melatiAvailability}/100 available`;
+            }
+        }
+
+        // Function to update clock and date in real-time
+        function updateClockAndDate() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            const dateString = now.toDateString();
+
+            document.getElementById("clock").textContent = `${hours}:${minutes}:${seconds}`;
+            document.getElementById("date").textContent = dateString;
+        }
+
+        // Update clock and date every second
+        setInterval(updateClockAndDate, 1000);
+
+        document.getElementById("loginButton").addEventListener("click", function() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // Check for valid username and password
+            if (username === sampleUsername && password === samplePassword) {
+                document.getElementById("loginPage").style.display = "none";
+                document.getElementById("areaSelectionPage").style.display = "block";
+            } else {
+                alert("Invalid username or password");
+            }
+        });
+
+        document.getElementById("mawarButton").addEventListener("click", function() {
+            document.getElementById("availabilityPage").style.display = "block";
+            updateAvailabilityText("Mawar");
+        });
+
+        document.getElementById("melatiButton").addEventListener("click", function() {
+            document.getElementById("availabilityPage").style.display = "block";
+            updateAvailabilityText("Melati");
+        });
+
+        document.getElementById("bookButton").addEventListener("click", function() {
+            const availabilityText = document.getElementById("availabilityText").textContent;
+            const area = availabilityText.split(" ")[0];
+
+            if (area === "Mawar" && mawarAvailability > 0) {
+                mawarAvailability--;
+                updateAvailabilityText("Mawar");
+                alert("Parking booked in Mawar Parking Area!");
+            } else if (area === "Melati" && melatiAvailability > 0) {
+                melatiAvailability--;
+                updateAvailabilityText("Melati");
+                alert("Parking booked in Melati Parking Area!");
+            } else {
+                alert("No available parking in this area.");
+            }
+        });
+
+        document.getElementById("backButton").addEventListener("click", function() {
+            document.getElementById("availabilityPage").style.display = "none";
+            document.getElementById("areaSelectionPage").style.display = "block";
+        });
+
+        document.getElementById("logoutButton").addEventListener("click", function() {
+            document.getElementById("areaSelectionPage").style.display = "none";
+            document.getElementById("availabilityPage").style.display = "none";
+            document.getElementById("loginPage").style.display = "block";
+        });
+    </script>
+</body>
+</html>
